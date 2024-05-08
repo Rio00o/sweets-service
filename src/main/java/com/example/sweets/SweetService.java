@@ -15,7 +15,7 @@ public class SweetService {
         if (sweet.isPresent()) {
             return sweet.get();
         } else {
-            throw new SweetNotFoundException("name not found");
+            throw new SweetNotFoundException("sweets not found");
         }
     }
 }
