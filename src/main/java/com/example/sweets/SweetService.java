@@ -3,7 +3,7 @@ package com.example.sweets;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class SweetService {
     private final SweetMapper sweetMapper;
     public SweetService(SweetMapper sweetMapper) {
