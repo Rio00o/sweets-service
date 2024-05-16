@@ -1,13 +1,13 @@
 package com.example.sweets;
 
 public class Sweet {
-    private int id;
+    private Integer id;
     private String name;
     private String company;
     private int price;
     private String prefecture;
 
-    public Sweet(int id, String name, String company, int price, String prefecture) {
+    public Sweet(Integer id, String name, String company, int price, String prefecture) {
         this.id = id;
         this.name = name;
         this.company = company;
@@ -15,7 +15,14 @@ public class Sweet {
         this.prefecture = prefecture;
     }
 
-    public int getId() {
+    public Sweet(String name, String company, int price, String prefecture) {
+        this.name = name;
+        this.company = company;
+        this.price = price;
+        this.prefecture = prefecture;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -34,7 +41,7 @@ public class Sweet {
         return prefecture;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
