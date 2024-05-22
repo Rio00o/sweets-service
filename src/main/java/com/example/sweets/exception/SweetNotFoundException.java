@@ -1,4 +1,4 @@
-package com.example.sweets;
+package com.example.sweets.exception;
 
 
 public class SweetNotFoundException extends RuntimeException {

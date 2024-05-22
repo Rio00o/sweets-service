@@ -1,4 +1,4 @@
-package com.example.sweets;
+package com.example.sweets.controller.response;
 
 public class SweetResponse {
     private String message;

@@ -1,4 +1,4 @@
-package com.example.sweets;
+package com.example.sweets.entity;
 
 public class Sweet {
     private Integer id;
@@ -16,6 +16,7 @@ public class Sweet {
     }
 
     public Sweet(String name, String company, int price, String prefecture) {
+        this.id = null;
         this.name = name;
         this.company = company;
         this.price = price;
