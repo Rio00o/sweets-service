@@ -25,8 +25,9 @@ import java.util.Map;
 
 @RestController
 public class  SweetController {
+
+    private final SweetService sweetService;
     @Autowired
-    private SweetService sweetService;
     public SweetController(SweetService sweetService) {
         this.sweetService = sweetService;
     }
