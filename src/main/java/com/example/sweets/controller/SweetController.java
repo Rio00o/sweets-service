@@ -59,11 +59,6 @@ public class  SweetController {
         SweetResponse body = new SweetResponse("sweet deleted");
         return ResponseEntity.ok(body);
     }
-    @PostMapping("/sweets/add")
-    public ResponseEntity<?> createSweet(@Valid @RequestBody SweetRequest request) {
-        Sweet sweet = sweetService.insert(request.getName(), request.getCompany(), request.getPrice(), request.getPrefecture());
-        return ResponseEntity.ok(sweet);
-    }
 
     @ExceptionHandler(value = SweetNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSweetNotFoundException(
