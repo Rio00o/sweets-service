@@ -31,6 +31,13 @@ public class SweetController {
         return ResponseEntity.created(location).body(body);
     }
 
+    @PatchMapping("/sweets/{id}")
+    public ResponseEntity<SweetResponse> update(@PathVariable("id") Integer id, @RequestBody SweetRequest sweetRequest) {
+        sweetService.update(id, sweetRequest.getName(), sweetRequest.getCompany(), sweetRequest.getPrice(), sweetRequest.getPrefecture());
+        SweetResponse body = new SweetResponse("sweet updated");
+        return ResponseEntity.ok(body);
+    }
+
 
     @ExceptionHandler(value = SweetNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSweetNotFoundException(

@@ -25,4 +25,17 @@ public class SweetService {
         sweetMapper.insert(sweet);
         return sweet;
     }
+
+    public void update(Integer id, String name, String company, int price, String prefecture) {
+        Optional<Sweet> existingSweet = sweetMapper.findById(id);
+        if (!existingSweet.isPresent()) {
+            throw new SweetNotFoundException("Sweet not found");
+        }
+        Sweet sweet = existingSweet.get();
+        sweet.setName(name);
+        sweet.setCompany(company);
+        sweet.setPrice(price);
+        sweet.setPrefecture(prefecture);
+        sweetMapper.update(sweet);
+    }
 }

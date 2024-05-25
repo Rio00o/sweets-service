@@ -1,9 +1,6 @@
 package com.example.sweets;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +16,8 @@ public interface SweetMapper {
     @Insert("INSERT INTO sweets (name, company, price, prefecture) VALUES (#{name}, #{company}, #{price}, #{prefecture})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(Sweet sweet);
+
+    @Update("UPDATE sweets SET name = #{name}, company = #{company}, price = #{price}, prefecture = #{prefecture} WHERE id = #{id}")
+    void update(Sweet sweet);
 
 }
