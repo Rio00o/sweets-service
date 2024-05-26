@@ -38,4 +38,12 @@ public class SweetService {
         sweet.setPrefecture(prefecture);
         sweetMapper.update(sweet);
     }
+
+    public void delete(Integer id) {
+        Optional<Sweet> sweetOptional = sweetMapper.findById(id);
+        if (!sweetOptional.isPresent()) {
+            throw new SweetNotFoundException("Sweet not found");
+        }
+        sweetMapper.delete(id);
+    }
 }

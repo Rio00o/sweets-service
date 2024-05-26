@@ -38,6 +38,13 @@ public class SweetController {
         return ResponseEntity.ok(body);
     }
 
+    @DeleteMapping("/sweets/{id}")
+    public ResponseEntity<SweetResponse> delete(@PathVariable("id") Integer id) {
+        sweetService.delete(id);
+        SweetResponse body = new SweetResponse("sweet deleted");
+        return ResponseEntity.ok(body);
+    }
+
 
     @ExceptionHandler(value = SweetNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSweetNotFoundException(

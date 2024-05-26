@@ -20,4 +20,7 @@ public interface SweetMapper {
     @Update("UPDATE sweets SET name = #{name}, company = #{company}, price = #{price}, prefecture = #{prefecture} WHERE id = #{id}")
     void update(Sweet sweet);
 
+    @Delete("DELETE FROM sweets WHERE id = #{id}")
+    void delete(Integer id);
+
 }
