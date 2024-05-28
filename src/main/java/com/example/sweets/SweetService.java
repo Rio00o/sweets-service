@@ -31,6 +31,10 @@ public class SweetService {
         if (!existingSweet.isPresent()) {
             throw new SweetNotFoundException("Sweet not found");
         }
+        Optional<Sweet> duplicatedSweet = sweetMapper.findByName(name);
+        if (duplicatedSweet.isPresent() && !duplicatedSweet.get().getId().equals(id)) {
+            throw new SweetDuplicatedException("Sweet already exists");
+        }
         Sweet sweet = existingSweet.get();
         sweet.setName(name);
         sweet.setCompany(company);

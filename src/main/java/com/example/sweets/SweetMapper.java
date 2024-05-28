@@ -13,6 +13,9 @@ public interface SweetMapper {
     @Select("SELECT * FROM sweets WHERE id = #{id}")
     Optional<Sweet> findById(int id);
 
+    @Select("SELECT * FROM sweets WHERE name = #{name}")
+    Optional<Sweet> findByName(String name);
+
     @Insert("INSERT INTO sweets (name, company, price, prefecture) VALUES (#{name}, #{company}, #{price}, #{prefecture})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(Sweet sweet);
