@@ -20,7 +20,18 @@ public class SweetService {
         }
     }
 
+
     public Sweet insert(String name, String company, int price, String prefecture) {
+        Optional<Sweet> sweetOptional = this.sweetMapper.findByName(name);
+        if (sweetOptional.isPresent()) {
+            throw new SweetDuplicatedException("Sweets already exists");
+        }
+
+        if (name == null || name.trim().isEmpty() || company == null || company.trim().isEmpty()
+                || prefecture == null || prefecture.trim().isEmpty()) {
+            throw new SweetValidationException("Name, company, and prefecture must not be empty");
+        }
+
         Sweet sweet = new Sweet(null, name, company, price, prefecture);
         sweetMapper.insert(sweet);
         return sweet;
@@ -30,6 +41,10 @@ public class SweetService {
         Optional<Sweet> existingSweet = sweetMapper.findById(id);
         if (!existingSweet.isPresent()) {
             throw new SweetNotFoundException("Sweet not found");
+        }
+        Optional<Sweet> duplicatedSweet = sweetMapper.findByName(name);
+        if (duplicatedSweet.isPresent() && !duplicatedSweet.get().getId().equals(id)) {
+            throw new SweetDuplicatedException("Sweet already exists");
         }
         Sweet sweet = existingSweet.get();
         sweet.setName(name);
