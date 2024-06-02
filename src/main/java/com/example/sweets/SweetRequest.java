@@ -36,4 +36,5 @@ public class SweetRequest {
     public String getPrefecture() {
         return prefecture;
     }
+
 }

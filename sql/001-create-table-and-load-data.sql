@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS sweets;
 CREATE TABLE sweets (
  id int unsigned AUTO_INCREMENT,
- name VARCHAR(255) NOT NULL,
+ name VARCHAR(255) NOT NULL UNIQUE,
  company VARCHAR(255) NOT NULL,
  price int NOT NULL,
  prefecture VARCHAR(255) NOT NULL,

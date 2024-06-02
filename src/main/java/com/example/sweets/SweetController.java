@@ -52,25 +52,25 @@ public class SweetController {
 
     @ExceptionHandler(value = SweetNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSweetNotFoundException(
-        SweetNotFoundException e, HttpServletRequest request) {
-            Map<String, String> body = Map.of(
+            SweetNotFoundException e, HttpServletRequest request) {
+        Map<String, String> body = Map.of(
                 "timestamp", ZonedDateTime.now().toString(),
                 "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
                 "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
                 "message", e.getMessage(),
                 "path", request.getRequestURI());
-            return new ResponseEntity(body, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity(body, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(value = SweetDuplicatedException.class)
     public ResponseEntity<Map<String, String>> handleSweetDuplicatedException(SweetDuplicatedException e, HttpServletRequest request){
         Map<String, String> body = Map.of(
                 "timestamp", ZonedDateTime.now().toString(),
-                "status", String.valueOf(HttpStatus.CONFLICT.value()),
-                "error", HttpStatus.CONFLICT.getReasonPhrase(),
+                "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "message", e.getMessage(),
                 "path", request.getRequestURI());
-        return new ResponseEntity(body, HttpStatus.CONFLICT);
+        return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SweetValidationException.class)
@@ -93,5 +93,4 @@ public class SweetController {
         });
         return ResponseEntity.badRequest().body(errors);
     }
-
 }
