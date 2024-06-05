@@ -1,5 +1,7 @@
 package com.example.sweets;
 
+import java.util.Objects;
+
 public class Sweet {
     private Integer id;
     private String name;
@@ -63,5 +65,18 @@ public class Sweet {
 
     public void setPrefecture(String prefecture) {
         this.prefecture = prefecture;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sweet sweet = (Sweet) o;
+        return price == sweet.price && Objects.equals(id, sweet.id) && Objects.equals(name, sweet.name) && Objects.equals(company, sweet.company) && Objects.equals(prefecture, sweet.prefecture);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, company, price, prefecture);
     }
 }
