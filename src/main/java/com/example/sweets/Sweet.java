@@ -79,4 +79,9 @@ public class Sweet {
     public int hashCode() {
         return Objects.hash(id, name, company, price, prefecture);
     }
+
+    @Override
+    public String toString() {
+        return "{\"id\":" + id + ",\"name\":\"" + name + "\"company\":" + company + "\"price\":" + price + "\"prefecture\":" + prefecture + "\"}";
+    }
 }

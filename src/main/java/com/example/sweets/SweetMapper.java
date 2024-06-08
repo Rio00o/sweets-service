@@ -26,5 +26,4 @@ public interface SweetMapper {
 
     @Delete("DELETE FROM sweets WHERE id = #{id}")
     void delete(Integer id);
-
 }
