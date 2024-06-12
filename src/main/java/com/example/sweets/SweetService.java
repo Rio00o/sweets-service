@@ -2,13 +2,20 @@ package com.example.sweets;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+
 @Service
 public class SweetService {
     private final SweetMapper sweetMapper;
 
     public SweetService(SweetMapper sweetMapper) {
         this.sweetMapper = sweetMapper;
+    }
+
+    public List<Sweet> findAll() {
+        return sweetMapper.findAll();
     }
 
     public Sweet findSweet(int id) {
@@ -60,5 +67,10 @@ public class SweetService {
             throw new SweetNotFoundException("Sweet not found");
         }
         sweetMapper.delete(id);
+    }
+
+    public Sweet findById(int id) {
+        Optional<Sweet> sweetOptional =sweetMapper.findById(id);
+        return sweetOptional.orElseThrow(() -> new SweetNotFoundException("Not Found"));
     }
 }
