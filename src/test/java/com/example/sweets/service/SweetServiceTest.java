@@ -14,6 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.util.Assert.isInstanceOf;
 
@@ -61,5 +62,33 @@ class SweetServiceTest {
         assertThatThrownBy(() -> sweetService.findSweet(0))
             .isInstanceOf(SweetNotFoundException.class);
         verify(sweetMapper).findById(0);
+    }
+
+    @Test
+    public void 新しいスイーツを登録すること () {
+        Sweet sweet = new Sweet("もみじ饅頭", "にしき堂", 1080, "広島県");
+        assertThat(sweetService.insert("もみじ饅頭", "にしき堂", 1080, "広島県")).isEqualTo(sweet);
+        verify(sweetMapper).insert(sweet);
+    }
+
+    @Test
+    public void 存在するスイーツを削除すること () {
+        Integer validId = 1;
+        Sweet existingSweet = new Sweet(1, "博多通りもん", "明月堂", 720, "福岡県");
+        when(sweetMapper.findById(1)).thenReturn(Optional.of(existingSweet));
+        sweetService.delete(validId);
+        verify(sweetMapper).delete(validId);
+    }
+
+    @Test
+    public void 指定したIDにスイーツがない場合は削除できないこと () {
+        Integer invalidId = 999;
+        when(sweetMapper.findById(invalidId)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(SweetNotFoundException.class, () -> {
+            sweetService.delete(999);
+        });
+
+        assertEquals("Sweet not found", exception.getMessage());
+        verify(sweetMapper, never()).delete(invalidId);
     }
 }
