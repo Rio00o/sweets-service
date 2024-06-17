@@ -1,9 +1,6 @@
 package com.example.sweets.service;
 
-import com.example.sweets.Sweet;
-import com.example.sweets.SweetMapper;
-import com.example.sweets.SweetNotFoundException;
-import com.example.sweets.SweetService;
+import com.example.sweets.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.springframework.util.Assert.isInstanceOf;
 
 class SweetServiceTest {
 
@@ -36,7 +32,6 @@ class SweetServiceTest {
     @Test
     public void 存在するスイーツのIDを指定したとき正常にスイーツが返されること() throws Exception {
         doReturn(Optional.of(new Sweet(1, "博多通りもん", "明月堂", 720, "福岡県"))).when(sweetMapper).findById(1);
-
         Sweet actual = sweetService.findById(1);
         assertThat(actual).isEqualTo(new Sweet(1, "博多通りもん", "明月堂", 720, "福岡県"));
     }
@@ -87,8 +82,59 @@ class SweetServiceTest {
         Exception exception = assertThrows(SweetNotFoundException.class, () -> {
             sweetService.delete(999);
         });
-
         assertEquals("Sweet not found", exception.getMessage());
         verify(sweetMapper, never()).delete(invalidId);
+    }
+
+    @Test
+    public void 存在するスイーツを新しく更新すること () {
+        Integer id = 1;
+        String name = "もみじ饅頭";
+        String company = "にしき堂";
+        int price = 1080;
+        String prefecture = "広島県";
+
+        Sweet existingSweet = new Sweet(1, "博多通りもん", "明月堂", 720, "福岡県");
+        when(sweetMapper.findById(id)).thenReturn(Optional.of(existingSweet));
+        sweetService.update(id, name, company, price, prefecture);
+
+        assertThat(existingSweet.getName()).isEqualTo(name);
+        assertThat(existingSweet.getCompany()).isEqualTo(company);
+        assertThat(existingSweet.getPrice()).isEqualTo(price);
+        assertThat(existingSweet.getPrefecture()).isEqualTo(prefecture);
+        verify(sweetMapper).update(existingSweet);
+    }
+
+    @Test
+    public void 指定したIDにスイーツがない場合は更新できないこと () {
+        Integer invalidId = 999;
+        when(sweetMapper.findById(invalidId)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(SweetNotFoundException.class, () -> {
+            sweetService.update(999,"もみじ饅頭", "にしき堂", 1080, "広島県");
+        });
+        assertEquals("Sweet not found", exception.getMessage());
+        verify(sweetMapper, never()).update(any(Sweet.class));
+    }
+
+    @Test
+    public void 別のIDで既に登録されているスイーツを更新しようとした場合更新ができないこと () {
+        Integer id = 1;
+        String name = "博多通りもん";
+        String company = "明月堂";
+        int price = 720;
+        String prefecture = "福岡県";
+
+        Sweet exstingSweet = new Sweet(id, name, company, price, prefecture);
+        Sweet duplicatedSweet = new Sweet(2, "博多通りもん", "明月堂", 720, "福岡県");
+
+        when(sweetMapper.findById(id)).thenReturn(Optional.of(exstingSweet));
+        when(sweetMapper.findByName(name)).thenReturn(Optional.of(duplicatedSweet));
+
+        Exception exception = assertThrows(SweetDuplicatedException.class, () -> {
+            sweetService.update(id, name, company, price, prefecture);
+        });
+
+        assertEquals("Sweet already exists", exception.getMessage());
+        verify(sweetMapper, never()).update(any(Sweet.class));
     }
 }
