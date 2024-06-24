@@ -71,17 +71,34 @@ public class Sweet {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Sweet sweet = (Sweet) o;
-        return price == sweet.price && Objects.equals(id, sweet.id) && Objects.equals(name, sweet.name) && Objects.equals(company, sweet.company) && Objects.equals(prefecture, sweet.prefecture);
+
+        if (price != sweet.price) return false;
+        if (!Objects.equals(id, sweet.id)) return false;
+        if (!Objects.equals(name, sweet.name)) return false;
+        if (!Objects.equals(company, sweet.company)) return false;
+        return Objects.equals(prefecture, sweet.prefecture);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, company, price, prefecture);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (company != null ? company.hashCode() : 0);
+        result = 31 * result + price;
+        result = 31 * result + (prefecture != null ? prefecture.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "{\"id\":" + id + ",\"name\":\"" + name + "\"company\":" + company + "\"price\":" + price + "\"prefecture\":" + prefecture + "\"}";
+        return "Sweet{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", company='" + company + '\'' +
+                ", price=" + price +
+                ", prefecture='" + prefecture + '\'' +
+                '}';
     }
 }
