@@ -18,10 +18,10 @@ public interface SweetMapper {
 
     @Insert("INSERT INTO sweets (name, company, price, prefecture) VALUES (#{name}, #{company}, #{price}, #{prefecture})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insert(Sweet sweet);
+    void insert(Sweet sweet);
 
     @Update("UPDATE sweets SET name = #{name}, company = #{company}, price = #{price}, prefecture = #{prefecture} WHERE id = #{id}")
-    int update(Sweet sweet);
+    void update(Sweet sweet);
 
     @Delete("DELETE FROM sweets WHERE id = #{id}")
     void delete(Integer id);
