@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,9 +23,16 @@ public class SweetController {
         this.sweetService = sweetService;
     }
 
+    @GetMapping("/sweets")
+    public ResponseEntity<List<Sweet>> getAllSweets() {
+        List<Sweet> sweet = sweetService.findAll();
+        return ResponseEntity.ok(sweet);
+    }
+
     @GetMapping("/sweets/{id}")
-    public Sweet getSweet(@PathVariable("id") int id) {
-        return sweetService.findSweet(id);
+    public ResponseEntity<Sweet> findById(@PathVariable("id") Integer id) {
+        Sweet sweet = sweetService.findById(id);
+        return ResponseEntity.ok(sweet);
     }
 
     @PostMapping("/sweets")
