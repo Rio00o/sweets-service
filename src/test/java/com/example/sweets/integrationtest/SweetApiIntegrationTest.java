@@ -27,7 +27,7 @@ public class SweetApiIntegrationTest {
     @Test
     @DataSet(value = "datasets/sweets.yml")
     @Transactional
-    void SQLテーブルに登録されているスイーツが全件取得できること() throws Exception {
+    void データベースに登録されているスイーツが全件取得できること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/sweets"))
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(MockMvcResultMatchers.content().json("""
