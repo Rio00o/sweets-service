@@ -84,8 +84,75 @@ public class SweetApiIntegrationTest {
     @Test
     @DataSet(value = "datasets/sweets.yml")
     @Transactional
-    void IDが999のスイーツを指定したとき例外処理が発生すること () throws Exception {
+    void IDが999のスイーツを取得しようとしたとき例外処理が発生すること () throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/sweets/999"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 新しくスイーツを登録すること () throws Exception {
+        Sweet sweet = new Sweet("もみじ饅頭", "にしき堂", 1080, "広島県");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(sweet);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(result))
+                        .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 存在するスイーツを新しく更新すること () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.patch("/sweets/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {
+                            "name": "もみじ饅頭",
+                            "company": "にしき堂",
+                            "price": 1080,
+                            "prefecture": "広島県"
+                        }
+                        """))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void すでに存在するスイーツと重複して更新しようとした場合更新できないこと () throws Exception {
+        String duplicateSweetJson = """
+                        {
+                            "name": "博多通りもん",
+                            "company": "明月堂",
+                            "price": 720,
+                            "prefecture": "福岡県"
+                        }
+                        """;
+        mockMvc.perform(MockMvcRequestBuilders.patch("/sweets/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(duplicateSweetJson))
+                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 指定したIDにスイーツが存在しない場合更新できないこと () throws Exception {
+        String NotFoundException = """
+                        {
+                            "name": "もみじ饅頭",
+                            "company": "にしき堂",
+                            "price": 1080,
+                            "prefecture": "広島県"
+                        }
+                """;
+        mockMvc.perform(MockMvcRequestBuilders.patch("/sweets/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(NotFoundException))
+                        .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
