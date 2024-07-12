@@ -156,4 +156,22 @@ public class SweetApiIntegrationTest {
                         .content(NotFoundException))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 存在するスイーツを正しく削除できること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 指定したIDにスイーツがない場合は削除できないこと() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/999")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }
