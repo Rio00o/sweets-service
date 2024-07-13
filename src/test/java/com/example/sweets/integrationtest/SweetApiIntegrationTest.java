@@ -3,6 +3,7 @@ package com.example.sweets.integrationtest;
 import com.example.sweets.Sweet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +160,7 @@ public class SweetApiIntegrationTest {
 
     @Test
     @DataSet("datasets/sweets.yml")
+    @ExpectedDataSet("datasets/delete-sweets.yml")
     @Transactional
     void 存在するスイーツを正しく削除できること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/1")
