@@ -3,6 +3,7 @@ package com.example.sweets.integrationtest;
 import com.example.sweets.Sweet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +155,25 @@ public class SweetApiIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/sweets/999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(NotFoundException))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @ExpectedDataSet("datasets/delete-sweets.yml")
+    @Transactional
+    void 存在するスイーツを正しく削除できること() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DataSet("datasets/sweets.yml")
+    @Transactional
+    void 指定したIDにスイーツがない場合は削除できないこと() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/999")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
