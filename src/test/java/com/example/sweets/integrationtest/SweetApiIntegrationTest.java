@@ -1,7 +1,5 @@
 package com.example.sweets.integrationtest;
 
-import com.example.sweets.Sweet;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
@@ -92,21 +90,26 @@ public class SweetApiIntegrationTest {
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
+    @ExpectedDataSet(value = "datasets/insert-sweets.yml", ignoreCols = "id")
     @Transactional
     void 新しくスイーツを登録すること() throws Exception {
-        Sweet sweet = new Sweet("もみじ饅頭", "にしき堂", 1080, "広島県");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String result = objectMapper.writeValueAsString(sweet);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/sweets")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(result))
+                        .content("""
+                                {
+                                    "name": "もみじ饅頭",
+                                    "company": "にしき堂",
+                                    "price": 1080,
+                                    "prefecture": "広島県"
+                                }
+                                """))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
+    @ExpectedDataSet(value = "datasets/update-sweets.yml")
     @Transactional
     void 存在するスイーツを新しく更新すること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/sweets/1")
@@ -123,7 +126,7 @@ public class SweetApiIntegrationTest {
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
     @Transactional
     void すでに存在するスイーツと重複して更新しようとした場合更新できないこと() throws Exception {
         String duplicateSweetJson = """
@@ -141,7 +144,7 @@ public class SweetApiIntegrationTest {
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
     @Transactional
     void 指定したIDにスイーツが存在しない場合更新できないこと() throws Exception {
         String NotFoundException = """
@@ -159,7 +162,7 @@ public class SweetApiIntegrationTest {
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
     @ExpectedDataSet("datasets/delete-sweets.yml")
     @Transactional
     void 存在するスイーツを正しく削除できること() throws Exception {
@@ -169,7 +172,7 @@ public class SweetApiIntegrationTest {
     }
 
     @Test
-    @DataSet("datasets/sweets.yml")
+    @DataSet(value = "datasets/sweets.yml")
     @Transactional
     void 指定したIDにスイーツがない場合は削除できないこと() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/sweets/999")
